@@ -50,7 +50,7 @@ angular.module("app.paper",["ng","app.subject"])
     .factory("paperService",function ($httpParamSerializer,$http) {
         return {
             findAllPapers:function (handler) {
-                $http.get("http://127.0.0.1:8888/exam/manager/getAllExamPapers.action").success(function (data) {
+                $http.get("http://127.0.0.1:8101/exam/manager/getAllExamPapers.action").success(function (data) {
                     handler(data);
                 });
             },
@@ -83,7 +83,7 @@ angular.module("app.paper",["ng","app.subject"])
                     }
                 }
                 obj = $httpParamSerializer(obj);
-                $http.post("http://127.0.0.1:8888/exam/manager/saveExamPaper.action",obj,{
+                $http.post("http://127.0.0.1:8101/exam/manager/saveExamPaper.action",obj,{
                     headers:{
                         "Content-Type":"application/x-www-form-urlencoded"
                     }

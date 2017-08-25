@@ -105,7 +105,7 @@ angular.module("app.subject",["ng"])
          * 审核题目
          */
         this.checkSubject = function (id,state,handler) {
-            $http.get("http://127.0.0.1:8888/exam/manager/checkSubject.action",{
+            $http.get("http://127.0.0.1:8101/exam/manager/checkSubject.action",{
                 params:{
                     'subject.id':id,
                     'subject.checkState':state
@@ -118,7 +118,7 @@ angular.module("app.subject",["ng"])
          * 删除题目
          * */
         this.delSubject = function (id, handler) {
-            $http.get("http://127.0.0.1:8888/exam/manager/delSubject.action",{
+            $http.get("http://127.0.0.1:8101/exam/manager/delSubject.action",{
                 params:{
                     'subject.id':id
                 }
@@ -166,7 +166,9 @@ angular.module("app.subject",["ng"])
             }
             //对obj对象进行表单格式的序列化操作（默认使用JSON格式）
             obj = $httpParamSerializer(obj);
-            $http.post("http://127.0.0.1:8888/exam/manager/saveSubject.action",obj,{
+            console.log("submit now...")
+            console.log(obj);
+            $http.post("http://127.0.0.1:8101/exam/manager/saveSubject.action",obj,{
                 headers:{
                     "Content-Type":"application/x-www-form-urlencoded"
                 }
@@ -200,7 +202,7 @@ angular.module("app.subject",["ng"])
                     }
                 }
             }
-            $http.get("http://127.0.0.1:8888/exam/manager/getAllSubjects.action",{
+            $http.get("http://127.0.0.1:8101/exam/manager/getAllSubjects.action",{
                 params:data
             }).success(function (data) {
                 handler(data);
@@ -214,25 +216,25 @@ angular.module("app.subject",["ng"])
                 return index==0?'A':(index==1?'B':(index==2?'C':(index==3?'D':'E')));
             },
             getAllTypes : function (handler) {
-                $http.get("http://127.0.0.1:8888/exam/manager/getAllSubjectType.action")
+                $http.get("http://127.0.0.1:8101/exam/manager/getAllSubjectType.action")
                     .success(function (data) {
                     handler(data);
                 });
             },
             getAllLevels : function (handler) {
-                $http.get("http://127.0.0.1:8888/exam/manager/getAllSubjectLevel.action")
+                $http.get("http://127.0.0.1:8101/exam/manager/getAllSubjectLevel.action")
                     .success(function (data) {
                     handler(data);
                 });
             },
             getAllDepartmentes : function (handler) {
-                $http.get("http://127.0.0.1:8888/exam/manager/getAllDepartmentes.action")
+                $http.get("http://127.0.0.1:8101/exam/manager/getAllDepartmentes.action")
                     .success(function (data) {
                     handler(data);
                 });
             },
             getAllTopics : function (handler) {
-                $http.get("http://127.0.0.1:8888/exam/manager/getAllTopics.action")
+                $http.get("http://127.0.0.1:8101/exam/manager/getAllTopics.action")
                     .success(function (data) {
                     handler(data);
                 });
@@ -283,3 +285,18 @@ angular.module("app.subject",["ng"])
             }
         }
     });
+
+$(function(){
+    // set index navigator click function
+    $(".index_nav").click(function () {
+        console.log("click .index_nav");
+        console.log($(this).text());
+        switch ($(this).text()){
+            case "题目管理":
+                $(".right").load("/subjectList.action");
+                break;
+        }
+    });
+
+});
+

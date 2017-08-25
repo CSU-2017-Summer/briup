@@ -1,3 +1,13 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Liuqi
+  Date: 2017/8/24
+  Time: 12:32
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <style>
     .Catalogcontentup ul{
         margin: 15px;
@@ -5,6 +15,13 @@
     .Catalogcontentup ul li{
         line-height: 22px;
     }
+    .chose a.active3{
+        color:#ffffff;
+        border:1px solid #41810a;
+        background-color: #6ca620;
+        -moz-border-radius:2px;
+        -webkit-border-radius:2px;
+        border-radius:2px;  }
 
 </style>
 <div class="editingarea">
@@ -15,7 +32,7 @@
             <span class="pl5 " ><input type="text"></span>
             <span class="icon_add">
                 <em class="icon_r">
-                    <a href="#/SubjectAdd">单个添加题目</a>
+                    <a href="javascript:void(0)" onclick="addProblem()">单个添加题目</a>
                 </em>
             </span>
         </div>
@@ -24,14 +41,17 @@
                 <tr>
                     <td align="center" style="width: 50px;">题型</td>
                     <td align="left">
-                        <div class="chose" class="active3">
+                        <div class="chose">
                             <a href="#/AllSubject/a/0/b/{{params.b}}/c/{{params.c}}/d/{{params.d}}"
-                               class="{{params.a==0?'active3':''}}">全部</a>
-                            <a href="#/AllSubject/a/{{type.id}}/b/{{params.b}}/c/{{params.c}}/d/{{params.d}}"
+                               class="active3">全部</a>
+                            <!--<a href="#/AllSubject/a/{{type.id}}/b/{{params.b}}/c/{{params.c}}/d/{{params.d}}"
                                class="{{params.a==type.id?'active3':''}}"
                                ng-repeat="type in types">
-                                {{type.realName}}
-                            </a>
+                                <%--{{type.realName}}--%>
+                            </a>-->
+                            <c:forEach items="${types}" var="vi">
+                                <a>${vi.realName}</a>
+                            </c:forEach>
                         </div>
                     </td>
                 </tr>
@@ -41,9 +61,12 @@
                         <div class="chose">
                             <a href="#/AllSubject/a/{{params.a}}/b/0/c/{{params.c}}/d/{{params.d}}"
                                class="{{params.b==0?'active3':''}}">全部</a>
-                            <a href="#/AllSubject/a/{{params.a}}/b/{{level.id}}/c/{{params.c}}/d/{{params.d}}"
-                               class="{{params.b==level.id?'active3':''}}"
-                               ng-repeat="level in levels">{{level.realName}}</a>
+                            <%--<a href="#/AllSubject/a/{{params.a}}/b/{{level.id}}/c/{{params.c}}/d/{{params.d}}"--%>
+                               <%--class="{{params.b==level.id?'active3':''}}"--%>
+                               <%--ng-repeat="level in levels">{{level.realName}}</a>--%>
+                            <c:forEach items="${levels}" var="vi">
+                                <a>${vi.realName}</a>
+                            </c:forEach>
                         </div>
                     </td>
                 </tr>
@@ -53,9 +76,12 @@
                         <div class="chose">
                             <a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/0/d/{{params.d}}"
                                class="{{params.c==0?'active3':''}}">全部</a>
-                            <a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{department.id}}/d/{{params.d}}"
-                               class="{{params.c==department.id?'active3':''}}"
-                               ng-repeat="department in departmentes">{{department.name}}</a>
+                            <%--<a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{department.id}}/d/{{params.d}}"--%>
+                               <%--class="{{params.c==department.id?'active3':''}}"--%>
+                               <%--ng-repeat="department in departmentes">{{department.name}}</a>--%>
+                            <c:forEach items="${departments}" var="vi">
+                                <a>${vi.name}</a>
+                            </c:forEach>
                         </div>
                     </td>
                 </tr>
@@ -65,8 +91,11 @@
                         <div class="chose">
                             <a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{params.c}}/d/0"
                                class="{{params.d==0?'active3':''}}">全部</a>
-                            <a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{params.c}}/d/{{topic.id}}"
-                               class="{{params.d==topic.id?'active3':''}}" ng-repeat="topic in topics">{{topic.title}}</a>
+                            <%--<a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{params.c}}/d/{{topic.id}}"--%>
+                               <%--class="{{params.d==topic.id?'active3':''}}" ng-repeat="topic in topics">{{topic.title}}</a>--%>
+                            <c:forEach items="${topics}" var="vi">
+                                <a>${vi.title}</a>
+                            </c:forEach>
                         </div>
                     </td>
                 </tr>
@@ -81,19 +110,22 @@
                     <input type="checkbox" ng-model="isShow"/><b>显示答案和解析</b>&nbsp;&nbsp;
                     <div><i>1</i><a href="#" class="pageone">前</a><a href="#" class="pagetwo">后</a></div></div>
 
-                <div class="Catalog_rightnei" ng-repeat="subject in subjects">
+                <!-- start here  -->
+
+                <c:forEach items="${subjects}" var="subject">
+                <div class="Catalog_rightnei">
                     <div class="Catalogtitwo">
-                        <b>题号：</b>{{subject.id}}&nbsp;&nbsp;
-                        <b>题型：</b>{{subject.subjectType.realName}}&nbsp;&nbsp;
-                        <b>难度：</b>{{subject.subjectLevel.realName}}&nbsp;&nbsp;
-                        <b>审核状态：</b><span style="color:red">{{subject.checkState}}</span>&nbsp;&nbsp;
-                        <b>上传人：</b>{{subject.user}}&nbsp;&nbsp;
-                        <b>上传时间:</b>{{subject.uploadTime}}&nbsp;&nbsp;
+                        <b>题号：</b>${subject.id}&nbsp;&nbsp;
+                        <b>题型：</b>${subject.subjectType.realName}&nbsp;&nbsp;
+                        <b>难度：</b>${subject.subjectLevel.realName}&nbsp;&nbsp;
+                        <b>审核状态：</b><span style="color:red">${subject.checkState}</span>&nbsp;&nbsp;
+                        <b>上传人：</b>${subject.user}&nbsp;&nbsp;
+                        <b>上传时间:</b>${subject.uploadTime}&nbsp;&nbsp;
                     </div>
                     <div class="Catalogcontent">
                         <div class="Catalogcontentup">
                             <!--题干-->
-                            {{$index+1}} 、{{subject.stem}}
+                            {{$index+1}} 、${subject.stem}
                             <!--题目选项-->
                             <ul>
                                 <li ng-repeat="choice in subject.choices">
@@ -103,10 +135,10 @@
                             </ul>
                             <div ng-show="isShow">
                                 <b>正确答案：</b>
-                                {{subject.answer}}
+                                ${subject.answer}
                                 <br>
                                 <b>答案解析：</b>
-                                {{subject.analysis}}
+                                ${subject.analysis}
                             </div>
                         </div>
                         <div class="Catalogcontentdown">
@@ -116,8 +148,15 @@
                         </div>
                     </div>
                 </div>
+                </c:forEach>
             </div>
             <div class="clear"></div>
         </div>
     </div>
 </div>
+
+<script>
+    function addProblem() {
+        $(".right").load("/addSubject.action");
+    }
+</script>

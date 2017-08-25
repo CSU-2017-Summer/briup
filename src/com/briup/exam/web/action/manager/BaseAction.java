@@ -27,11 +27,11 @@ import com.opensymphony.xwork2.ActionSupport;
 public class BaseAction extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Autowired
-	private ISubjectLevelService service1; 
+	private ISubjectLevelService service1;
 	@Autowired
-	private ISubjectTypeService service2; 
+	private ISubjectTypeService service2;
 	@Autowired
 	private ITopicService service3;
 	@Autowired
@@ -69,7 +69,7 @@ public class BaseAction extends ActionSupport {
     	app.put("topic", topic);
     	app.put("department", department);
 	}
-	
+
 
 	public ISubjectLevelService getService1() {
 		return service1;

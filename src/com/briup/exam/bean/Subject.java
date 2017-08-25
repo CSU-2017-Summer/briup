@@ -138,6 +138,7 @@ public class Subject implements Serializable {
 	public Set<Choice> getChoices() {
 		return choices;
 	}
+
 	public void setChoices(Set<Choice> choices) {
 		this.choices = choices;
 	}

@@ -44,7 +44,7 @@ angular.module("app",["ng","ngRoute","app.subject","app.paper","app.subjectType"
             templateUrl:"tpl/subject/subjectList.html",
             controller:"subjectController"
         }).when("/SubjectAdd",{
-            templateUrl:"tpl/subject/subjectAdd.html",
+            templateUrl:"/addSubject.action",
             controller:"subjectController"
         }).when("/SubjectDel/id/:id",{
             templateUrl:"tpl/subject/subjectList.html",

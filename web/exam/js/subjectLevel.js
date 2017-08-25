@@ -12,7 +12,7 @@ angular.module("app.subjectLevel",["ng"])
     .factory("subjectLevelService",function ($http) {
         return {
                 getAllLevels : function (handler) {
-                        $http.get("http://127.0.0.1:8888/exam/manager/getAllSubjectLevel.action")
+                        $http.get("http://127.0.0.1:8101/exam/manager/getAllSubjectLevel.action")
                             .success(function (data) {
                                     handler(data);
                             });

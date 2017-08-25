@@ -75,7 +75,7 @@ public interface IBaseService<M extends Serializable> {
 	
 	/**
 	 * 批量保存
-	 * @param model
+	 * @param models
 	 */
 	void batchSave(List<M> models);
 

@@ -37,6 +37,22 @@ public class BaseDao<M extends java.io.Serializable>{
 	public Session getSession(){
 		return sessionFactory.getCurrentSession();
 	}
+
+	public void save(Object object){
+        System.out.println("in dao basedao.save()...");
+        getSession().save(object);
+    }
+
+    public List<M> findAll(M m,Order ... orders){
+        System.out.println("in ");
+        Criteria criteria = getSession().createCriteria(m.getClass());
+	    for(Order order:orders){
+	        criteria.addOrder(order);
+        }
+        List<M> list = criteria.list();
+
+	    return list;
+    }
 	
 	
 	

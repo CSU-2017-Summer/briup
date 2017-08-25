@@ -7,4 +7,8 @@ import com.briup.exam.bean.Subject;
 @Repository
 public class SubjectDao extends BaseDao<Subject> {
 
+//    public void saveSubject(Subject subject){
+//        System.out.println("in dao saveSubject()...");
+//        getSession().save(subject);
+//    }
 }

@@ -12,8 +12,10 @@ angular.module("app.subjectType",["ng"])
     .factory("subjectTypeService",function ($http) {
         return {
             getAllTypes : function (handler) {
-                $http.get("http://127.0.0.1:8888/exam/manager/getAllSubjectType.action")
+                $http.get("http://127.0.0.1:8101/exam/manager/getAllSubjectType.action")
                     .success(function (data) {
+                        console.log("in getAllTypes..");
+                        console.log(data);
                         handler(data);
                     });
             }

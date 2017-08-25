@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="editingarea">
     <div class="c_flex"><span class="c_flexible"></span></div>
@@ -6,20 +8,33 @@
         <div class="Problem">
             <div class="Attributetit">题目属性</div>
             题目类型
-            <select ng-model="subject.typeId"
-                    ng-options="type.id as type.realName for type in types"></select>
+            <select>
+                <!-- test -->
+                <c:forEach items="${types}" var="vi">
+                    <option value="${vi.id}">${vi.realName}</option>
+                </c:forEach>
+            </select>
             &nbsp;&nbsp;
             难度级别
-            <select ng-model="subject.levelId"
-                    ng-options="level.id as level.realName for level in levels"></select>
+            <select>
+                <c:forEach items="${levels}" var="vi">
+                    <option value="${vi.id}">${vi.realName}</option>
+                </c:forEach>
+            </select>
             &nbsp;&nbsp;
             所属方向
-            <select ng-model="subject.departmentId"
-                    ng-options="d.id as d.name for d in departmentes"></select>
+            <select>
+                <c:forEach items="${departments}" var="vi">
+                    <option value="${vi.id}">${vi.name}</option>
+                </c:forEach>
+            </select>
             &nbsp;&nbsp;
             所属知识点
-            <select ng-model="subject.topicId"
-                    ng-options="t.id as t.title for t in topics | selectTopics :subject.departmentId "></select>
+            <select>
+                <c:forEach items="${topics}" var="vi">
+                    <option value="${vi.id}">${vi.title}</option>
+                </c:forEach>
+            </select>
             &nbsp;&nbsp;
         </div>
         <div class="Problem">

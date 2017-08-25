@@ -12,7 +12,7 @@ angular.module("app.department",["ng"])
     .factory("departmentService",function ($http) {
         return {
                 getAllDepartments: function (handler) {
-                    $http.get("http://127.0.0.1:8888/exam/manager/getAllDepartmentes.action").success(function (data) {
+                    $http.get("http://127.0.0.1:8101/exam/manager/getAllDepartmentes.action").success(function (data) {
                             handler(data);
                     });
                 }
