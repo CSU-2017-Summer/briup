@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 
 <style>
     .Catalogcontentup ul{
@@ -23,7 +25,22 @@
         -webkit-border-radius:2px;
         border-radius:2px;  }
 
+    #submit-query{
+        color:#ffffff;
+        border:1px solid #41810a;
+        background-color: #6ca620;
+        -moz-border-radius:2px;
+        -webkit-border-radius:2px;
+        border-radius:2px;  }
+
+    a:hover{
+        cursor:pointer;
+        text-decoration: none !important;
+    }
+
+
 </style>
+${typeid},${levelid},${departmentid},${topicid}
 <div class="editingarea">
     <div class="c_flex"><span class="c_flexible"></span></div>
     <div class="c_editview">
@@ -42,15 +59,15 @@
                     <td align="center" style="width: 50px;">题型</td>
                     <td align="left">
                         <div class="chose">
-                            <a href="#/AllSubject/a/0/b/{{params.b}}/c/{{params.c}}/d/{{params.d}}"
-                               class="active3">全部</a>
+                            <a href="javascript:void(0)"
+                               class="a-types active3 alltypes">全部</a>
                             <!--<a href="#/AllSubject/a/{{type.id}}/b/{{params.b}}/c/{{params.c}}/d/{{params.d}}"
                                class="{{params.a==type.id?'active3':''}}"
                                ng-repeat="type in types">
                                 <%--{{type.realName}}--%>
                             </a>-->
                             <c:forEach items="${types}" var="vi">
-                                <a>${vi.realName}</a>
+                                <a class="a-types" href="javascript:void(0)" onclick="getType(${vi.id})">${vi.realName}</a>
                             </c:forEach>
                         </div>
                     </td>
@@ -59,13 +76,13 @@
                     <td align="center">难度</td>
                     <td align="left">
                         <div class="chose">
-                            <a href="#/AllSubject/a/{{params.a}}/b/0/c/{{params.c}}/d/{{params.d}}"
-                               class="{{params.b==0?'active3':''}}">全部</a>
+                            <a href="javascript:void(0)"
+                               class="a-levels active3 alllevels">全部</a>
                             <%--<a href="#/AllSubject/a/{{params.a}}/b/{{level.id}}/c/{{params.c}}/d/{{params.d}}"--%>
                                <%--class="{{params.b==level.id?'active3':''}}"--%>
                                <%--ng-repeat="level in levels">{{level.realName}}</a>--%>
                             <c:forEach items="${levels}" var="vi">
-                                <a>${vi.realName}</a>
+                                <a class="a-levels" id="type_${vi.id}" onclick="getLevel(${vi.id})">${vi.realName}</a>
                             </c:forEach>
                         </div>
                     </td>
@@ -74,13 +91,13 @@
                     <td align="center">方向</td>
                     <td align="left">
                         <div class="chose">
-                            <a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/0/d/{{params.d}}"
-                               class="{{params.c==0?'active3':''}}">全部</a>
+                            <a href="javascript:void(0)"
+                               class="a-departments active3 alldepartments">全部</a>
                             <%--<a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{department.id}}/d/{{params.d}}"--%>
                                <%--class="{{params.c==department.id?'active3':''}}"--%>
                                <%--ng-repeat="department in departmentes">{{department.name}}</a>--%>
                             <c:forEach items="${departments}" var="vi">
-                                <a>${vi.name}</a>
+                                <a class="a-departments" onclick="getDepartment(${vi.id})">${vi.name}</a>
                             </c:forEach>
                         </div>
                     </td>
@@ -89,74 +106,113 @@
                     <td align="center">知识点</td>
                     <td align="left">
                         <div class="chose">
-                            <a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{params.c}}/d/0"
-                               class="{{params.d==0?'active3':''}}">全部</a>
+                            <a href="javascript:void(0)"
+                               class="a-topics active3 alltopics">全部</a>
                             <%--<a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{params.c}}/d/{{topic.id}}"--%>
                                <%--class="{{params.d==topic.id?'active3':''}}" ng-repeat="topic in topics">{{topic.title}}</a>--%>
                             <c:forEach items="${topics}" var="vi">
-                                <a>${vi.title}</a>
+                                <a class="a-topics" onclick="getTopic(${vi.id})">${vi.title}</a>
                             </c:forEach>
                         </div>
                     </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="2" class="active3" ><input type="submit" value="确定" id="submit-query"></td>
                 </tr>
             </table>
         </div>
         <div class="Catalog">
 
-            <div class="Catalog_right">
-                <div class="Catalogtitle">
-                    总计<em>15552</em>道题&nbsp;&nbsp;
-                    提示：单击体面可显示答案和解析&nbsp;&nbsp;
-                    <input type="checkbox" ng-model="isShow"/><b>显示答案和解析</b>&nbsp;&nbsp;
-                    <div><i>1</i><a href="#" class="pageone">前</a><a href="#" class="pagetwo">后</a></div></div>
 
-                <!-- start here  -->
-
-                <c:forEach items="${subjects}" var="subject">
-                <div class="Catalog_rightnei">
-                    <div class="Catalogtitwo">
-                        <b>题号：</b>${subject.id}&nbsp;&nbsp;
-                        <b>题型：</b>${subject.subjectType.realName}&nbsp;&nbsp;
-                        <b>难度：</b>${subject.subjectLevel.realName}&nbsp;&nbsp;
-                        <b>审核状态：</b><span style="color:red">${subject.checkState}</span>&nbsp;&nbsp;
-                        <b>上传人：</b>${subject.user}&nbsp;&nbsp;
-                        <b>上传时间:</b>${subject.uploadTime}&nbsp;&nbsp;
-                    </div>
-                    <div class="Catalogcontent">
-                        <div class="Catalogcontentup">
-                            <!--题干-->
-                            {{$index+1}} 、${subject.stem}
-                            <!--题目选项-->
-                            <ul>
-                                <li ng-repeat="choice in subject.choices">
-                                    {{choice.no}}
-                                    {{choice.content}}
-                                </li>
-                            </ul>
-                            <div ng-show="isShow">
-                                <b>正确答案：</b>
-                                ${subject.answer}
-                                <br>
-                                <b>答案解析：</b>
-                                ${subject.analysis}
-                            </div>
-                        </div>
-                        <div class="Catalogcontentdown">
-                            <a href="#/SubjectCheck/id/{{subject.id}}/state/通过">审核通过</a>
-                            <a href="#/SubjectCheck/id/{{subject.id}}/state/不通过">审核不通过</a>
-                            <a href="#/SubjectDel/id/{{subject.id}}">删除题目</a>
-                        </div>
-                    </div>
-                </div>
-                </c:forEach>
-            </div>
             <div class="clear"></div>
         </div>
     </div>
 </div>
 
 <script>
+    var typeid = 0;
+    var departmentid = 0;
+    var levelid = 0;
+    var topicid = 0;
+
+
+
     function addProblem() {
         $(".right").load("/addSubject.action");
     }
+
+    function getType(id){
+//        console.log(id);
+        typeid = id;
+    }
+
+    function getTopic(id) {
+//        console.log(id);
+        topicid = id;
+    }
+
+    function getDepartment(id) {
+//        console.log(id);
+        departmentid = id;
+    }
+
+    function getLevel(id) {
+//        console.log(id);
+        levelid = id;
+    }
+
+    $(".alldepartments").click(function () {
+        departmentid = 0;
+    })
+
+    $(".alltopics").click(function () {
+        topicid = 0;
+    })
+
+    $(".alllevels").click(function () {
+        levelid = 0;
+    })
+
+    $(".alltypes").click(function () {
+        typeid = 0;
+    })
+
+    $(".a-types").click(function () {
+//        console.log($(this).text());
+        $(".a-types").removeClass("active3");
+        $(this).addClass("active3");
+    });
+
+    $(".a-levels").click(function () {
+//        console.log($(this).text());
+        $(".a-levels").removeClass("active3");
+        $(this).addClass("active3");
+    });
+
+    $(".a-departments").click(function () {
+//        console.log($(this).text());
+        $(".a-departments").removeClass("active3");
+        $(this).addClass("active3");
+    });
+
+    $(".a-topics").click(function () {
+//        console.log($(this).text());
+        $(".a-topics").removeClass("active3");
+        $(this).addClass("active3");
+    });
+
+
+    $("#submit-query").click(function () {
+        console.log("in list page "+"type:"+typeid+" level"+levelid+" department:"+departmentid+" topic:"+topicid);
+        var url="subject.department.id="+departmentid+"&subject.subjectLevel.id="+levelid+"&subject.subjectType.id="+typeid+"&subject.topic.id="+topicid;
+        $.post("/subjectDetail.action?"+url,function(){
+            $(".Catalog").load("getDetail.action");
+        });
+    })
+
+
+
+
+
+
 </script>

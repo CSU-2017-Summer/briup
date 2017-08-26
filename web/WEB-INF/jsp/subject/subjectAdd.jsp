@@ -293,7 +293,7 @@
         var url="";
         if(type!=3) {
             for (var i = 0; i < choicecorrect.length; i++) {
-                url += "choices["+i+"].correct=" + choicecorrect[i] +"&choices["+i+"].content="+choicecontent[i];
+                url += "choice["+i+"].correct=" + choicecorrect[i] +"&choice["+i+"].content="+choicecontent[i];
                 url += "&";
             }
         }

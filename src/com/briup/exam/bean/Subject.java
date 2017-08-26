@@ -132,7 +132,7 @@ public class Subject implements Serializable {
 		this.topic = topic;
 	}
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name="subject_id")
 	@Cascade({CascadeType.REMOVE})
 	public Set<Choice> getChoices() {

@@ -5,7 +5,11 @@ import com.briup.exam.common.util.Criteriable;
 import com.briup.exam.common.util.IPageInfo;
 import com.briup.exam.dao.SubjectDao;
 import com.briup.exam.service.ISubjectService;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +26,11 @@ public class SubjectServiceImpl implements ISubjectService {
 
     @Override
     public Subject findById(Long id) {
-        return null;
+        System.out.println(dao);
+        Criteria criteria = dao.getSession().createCriteria(Subject.class);
+        criteria.add(Restrictions.eq("id",id));
+
+        return (Subject) criteria.list().get(0);
     }
 
     @Override
@@ -37,7 +45,42 @@ public class SubjectServiceImpl implements ISubjectService {
 
     @Override
     public List<Subject> findByExample(Subject model, Order... orders) {
-        return null;
+        Criteria subjectCriteria = dao.getSession().createCriteria(Subject.class);
+
+        if(model.getStem()!=null){
+            subjectCriteria.add(Restrictions.like("stem", "%"+model.getStem()+"%"));
+        }
+        if(model.getCheckState()!=null){
+            subjectCriteria.add(Restrictions.like("checkState", model.getCheckState()));
+        }
+        if(model.getSubjectLevel()!=null){
+            long id = model.getSubjectLevel().getId();
+            if(id!=0) {
+                subjectCriteria.createCriteria("subjectLevel").add(Restrictions.eq("id", id));
+            }
+        }
+        if(model.getSubjectType()!=null){
+            long id = model.getSubjectType().getId();
+            if(id!=0) {
+                subjectCriteria.createCriteria("subjectType").add(Restrictions.eq("id", id));
+            }
+        }
+        if(model.getDepartment()!=null){
+            long id = model.getDepartment().getId();
+            if(id!=0) {
+                subjectCriteria.createCriteria("department").add(Restrictions.eq("id", id));
+            }
+        }
+        if(model.getTopic()!=null){
+            long id = model.getTopic().getId();
+            if(id!=0) {
+                subjectCriteria.createCriteria("topic").add(Restrictions.eq("id", id));
+            }
+        }
+        for(Order order:orders) {
+            subjectCriteria.addOrder(order).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        }
+        return subjectCriteria.list();
     }
 
     @Override
@@ -73,6 +116,7 @@ public class SubjectServiceImpl implements ISubjectService {
 
     @Override
     public void saveOrUpdate(Subject model) {
+        dao.saveOrUpdate(model);
 
     }
 
@@ -88,7 +132,7 @@ public class SubjectServiceImpl implements ISubjectService {
 
     @Override
     public void delete(Long id) {
-
+        dao.delete(id);
     }
 
     @Override

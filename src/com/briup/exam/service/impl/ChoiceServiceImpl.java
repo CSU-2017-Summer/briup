@@ -6,7 +6,9 @@ import com.briup.exam.common.util.IPageInfo;
 import com.briup.exam.dao.BaseDao;
 import com.briup.exam.dao.ChoiceDao;
 import com.briup.exam.service.IChoiceService;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,10 @@ public class ChoiceServiceImpl implements IChoiceService {
 
     @Override
     public Choice findById(Long id) {
-        return null;
+        Criteria criteria = dao.getSession().createCriteria(Choice.class);
+        criteria.add(Restrictions.eq("id",id));
+
+        return (Choice) criteria.list().get(0);
     }
 
     @Override

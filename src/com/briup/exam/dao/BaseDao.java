@@ -1,28 +1,16 @@
 package com.briup.exam.dao;
 
 import java.lang.reflect.ParameterizedType;
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Date;
+import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.type.Type;
+import org.hibernate.criterion.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
-import com.briup.exam.common.util.Criteriable;
-import com.briup.exam.common.util.IPageInfo;
 
 /**
  * 基本dao类，其他dao可以继承该基础类，然后调用现有的增删改查方法
@@ -43,17 +31,45 @@ public class BaseDao<M extends java.io.Serializable>{
         getSession().save(object);
     }
 
+    public void delete(M m) {
+        getSession().delete(m);
+    }
+
     public List<M> findAll(M m,Order ... orders){
-        System.out.println("in ");
+        System.out.println("in basedao findAll...");
         Criteria criteria = getSession().createCriteria(m.getClass());
 	    for(Order order:orders){
 	        criteria.addOrder(order);
         }
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//        criteria.add(Restrictions.sqlRestriction("rowid in (select  min(a.rowid)  from tbl_exam_subjection a group by a.id)"));
         List<M> list = criteria.list();
+		System.out.println("list size:"+list.size());
 
 	    return list;
     }
-	
-	
-	
+
+    public Class<M> getEntityClass(){
+        Type genType = getClass().getGenericSuperclass();
+        Type[] params = ((ParameterizedType)genType).getActualTypeArguments();
+        return (Class)params[0];
+    }
+
+	public M findById(Long id) {
+		Criteria criteria = getSession().createCriteria(getEntityClass());
+		List<M>list = criteria.add(Restrictions.eq("id", id)).list();
+		if(list.size()==0) {
+			return null;
+		}else {
+			return list.get(0);
+		}
+	}
+
+	public void delete(Long id) {
+		delete( (M)findById(id));
+	}
+
+    public void saveOrUpdate(M m) {
+        getSession().saveOrUpdate(m);
+    }
 }

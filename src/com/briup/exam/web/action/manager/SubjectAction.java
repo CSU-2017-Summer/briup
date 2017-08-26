@@ -8,6 +8,7 @@ import com.opensymphony.xwork2.util.Element;
 import com.opensymphony.xwork2.util.KeyProperty;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.interceptor.ApplicationAware;
 import org.apache.struts2.interceptor.RequestAware;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,28 +19,29 @@ import java.util.*;
  * Created by Liuqi on 2017/8/23.
  */
 @Action
-public class SubjectAction extends ActionSupport implements RequestAware{
+public class SubjectAction extends ActionSupport implements ApplicationAware{
 
     List<SubjectType> types;
     List<SubjectLevel> levels;
     List<Topic> topics;
     List<Department> departments;
     List<Subject> subjects;
+    List<Choice> choices;
 
     private Map<String,Object> reqM;
 
     private Subject subject;
-    private List<Choice> choices = new ArrayList<>();
+    private List<Choice> choice = new ArrayList<>();
 
 
     private SubjectType subjectType;
 
-    public List<Choice> getChoices() {
-        return choices;
+    public List<Choice> getChoice() {
+        return choice;
     }
 
-    public void setChoices(List<Choice> choices) {
-        this.choices = choices;
+    public void setChoice(List<Choice> choice) {
+        this.choice = choice;
     }
 
     public SubjectType getSubjectType() {
@@ -89,7 +91,7 @@ public class SubjectAction extends ActionSupport implements RequestAware{
         reqM.put("topics",topics);
         reqM.put("levels",levels);
         reqM.put("types",types);
-        reqM.put("subjects",subjects);
+//        reqM.put("subjects",subjects);
     }
 
 
@@ -102,8 +104,6 @@ public class SubjectAction extends ActionSupport implements RequestAware{
     public String saveSubject(){
         System.out.println("in action saveSubjectAction...");
         System.out.println(subject.getStem()+" "+subject.getAnalysis()+" "+subject.getAnswer());
-//        System.out.println(subject.getSubjectType()+":"+subject.getSubjectType());
-//        System.out.println(choice.getCorrect()+":::"+choice.getContent());
 
         subject.setCheckState("未审核");
         subject.setUploadTime(new Date());
@@ -112,11 +112,8 @@ public class SubjectAction extends ActionSupport implements RequestAware{
             subjectService.save(subject);
         }
         else{
-            System.out.println("refreshed...");
-            System.out.println(choices.size());
-            System.out.println("choicesList:");
             subjectService.save(subject);
-            for(Choice c:choices){
+            for(Choice c:choice){
                 System.out.println("save:"+c.getCorrect()+":"+c.getContent());
                 c.setSubject(subject);
                 choiceService.save(c);
@@ -131,7 +128,6 @@ public class SubjectAction extends ActionSupport implements RequestAware{
             @Result(name = SUCCESS,location = "/WEB-INF/jsp/subject/subjectAdd.jsp")
     })
     public String addSubject(){
-        System.out.println("in action add Subject...");
         getList();
         setReqM();
         return SUCCESS;
@@ -141,7 +137,7 @@ public class SubjectAction extends ActionSupport implements RequestAware{
 
 
     @Action(value="/getAllSubjectType",results = {
-            @Result(name = SUCCESS,location = "/WEB-INF/jsp/subject/subjectAdd.jsp")
+            @Result(name = SUCCESS,location = "/WEB-INF/jsp/subject/subjectList.jsp")
     })
     public String getAllSubjectType(){
         System.out.println("in action getAllSubjectAction...");
@@ -164,8 +160,59 @@ public class SubjectAction extends ActionSupport implements RequestAware{
         return SUCCESS;
     }
 
+    @Action(value="/subjectDetail", results = {
+            @Result(name=SUCCESS,location = "/WEB-INF/jsp/subject/subjectList.jsp")
+    })
+    public String subjectDetail(){
+        System.out.println("type: "+subject.getSubjectType().getId()+" level:"+subject.getSubjectLevel().getId()+" stem:"+subject.getStem());
+        List<Subject> list = subjectService.findByExample(subject,Order.asc("id"));
+        System.out.println(list.size());
+        getList();
+        setReqM();
+        for(Subject s:list){
+            System.out.println(s);
+        }
+        reqM.put("subjects",list);
+        reqM.put("typeid",subject.getSubjectType().getId());
+        reqM.put("levelid",subject.getSubjectLevel().getId());
+        reqM.put("topicid",subject.getTopic().getId());
+        reqM.put("departmentid",subject.getDepartment().getId());
+        return SUCCESS;
+    }
+
+    @Action(value = "/getDetail",results = {
+            @Result(name = SUCCESS,location = "/WEB-INF/jsp/subject/subjectDetail.jsp")
+    })
+    public String getDetail(){
+        return SUCCESS;
+    }
+
+
+    @Action(value = "/deleteSubject",results = {
+            @Result(name=SUCCESS,location = "/WEB-INF/jsp/subject/subjectList.jsp")
+    })
+    public String deleteSubject(){
+        System.out.println("in delete subject... "+subject.getId());
+        subjectService.delete(subject.getId());
+        return SUCCESS;
+    }
+
+
+    @Action(value = "/changeCheckState",results = {
+            @Result(name=SUCCESS,location = "/WEB-INF/jsp/subject/subjectList.jsp")
+    })
+    public String changeCheckState(){
+        System.out.println("in changecheckstate"+subject.getId()+" :"+subject.getCheckState());
+        Subject s = subjectService.findById(subject.getId());
+        s.setCheckState(subject.getCheckState());
+        subjectService.saveOrUpdate(s);
+        return SUCCESS;
+    }
+
+
+
     @Override
-    public void setRequest(Map<String, Object> map) {
+    public void setApplication(Map<String, Object> map) {
         this.reqM = map;
     }
 }
