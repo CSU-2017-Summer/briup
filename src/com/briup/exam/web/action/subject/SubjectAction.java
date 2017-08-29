@@ -1,15 +1,12 @@
-package com.briup.exam.web.action.manager;
+package com.briup.exam.web.action.subject;
 
 
 import com.briup.exam.bean.*;
 import com.briup.exam.service.impl.*;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.Element;
-import com.opensymphony.xwork2.util.KeyProperty;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.interceptor.ApplicationAware;
-import org.apache.struts2.interceptor.RequestAware;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,6 +30,24 @@ public class SubjectAction extends ActionSupport implements ApplicationAware{
     private Subject subject;
     private List<Choice> choice = new ArrayList<>();
 
+    private String parentdir;
+    private String file;
+
+    public String getParentdir() {
+        return parentdir;
+    }
+
+    public void setParentdir(String parentdir) {
+        this.parentdir = parentdir;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
 
     private SubjectType subjectType;
 
@@ -99,28 +114,37 @@ public class SubjectAction extends ActionSupport implements ApplicationAware{
 
 
     @Action(value="/saveSubject",results = {
-            @Result(name = SUCCESS,location = "#")
+            @Result(name = SUCCESS, location ="/WEB-INF/jsp/subject/subjectList.jsp")
     })
     public String saveSubject(){
         System.out.println("in action saveSubjectAction...");
-        System.out.println(subject.getStem()+" "+subject.getAnalysis()+" "+subject.getAnswer());
+        System.out.println(subject);
+//        System.out.println(subject.getStem()+" "+subject.getAnalysis()+" "+subject.getAnswer());
+        String prefix[] ={"A  ","B  ","C  ","D  ","E  ","F  ","G  ","H  "};
+        if(subject!=null) {
+            subject.setCheckState("未审核");
+            subject.setUploadTime(new Date());
+            if (subject.getSubjectType().getId() == 3) {
+                System.out.println("存简答题");
+                subjectService.save(subject);
+            } else {
+                subjectService.save(subject);
+                int i = 0;
+                for (Choice c : choice) {
+                    c.setSubject(subject);
+                    c.setContent(prefix[i++] + c.getContent());
+                    System.out.println("save:" + c.getCorrect() + ":" + c.getContent());
+                    choiceService.save(c);
+                }
 
-        subject.setCheckState("未审核");
-        subject.setUploadTime(new Date());
-        if(subject.getSubjectType().getId()==3){
-            System.out.println("存简答题");
-            subjectService.save(subject);
-        }
-        else{
-            subjectService.save(subject);
-            for(Choice c:choice){
-                System.out.println("save:"+c.getCorrect()+":"+c.getContent());
-                c.setSubject(subject);
-                choiceService.save(c);
+                //test
+                System.out.println("before..");
+                for (Choice c : subject.getChoices()) {
+                    System.out.println("选项为：" + c.getCorrect() + ": " + c.getContent());
+                }
+                System.out.println("after..");
             }
         }
-
-//        subjectService.save(subject);
         return SUCCESS;
     }
 
@@ -128,13 +152,13 @@ public class SubjectAction extends ActionSupport implements ApplicationAware{
             @Result(name = SUCCESS,location = "/WEB-INF/jsp/subject/subjectAdd.jsp")
     })
     public String addSubject(){
+        System.out.println(parentdir+":"+file);
         getList();
         setReqM();
+        reqM.put("parentdir",parentdir);
+        reqM.put("file",file);
         return SUCCESS;
     }
-
-
-
 
     @Action(value="/getAllSubjectType",results = {
             @Result(name = SUCCESS,location = "/WEB-INF/jsp/subject/subjectList.jsp")
@@ -154,6 +178,7 @@ public class SubjectAction extends ActionSupport implements ApplicationAware{
             @Result(name = SUCCESS,location = "/WEB-INF/jsp/subject/subjectList.jsp")
     })
     public String subjectList(){
+        System.out.println("in action subjectList()");
         getList();
         setReqM();
         System.out.println("subject size:"+this.subjects.size());
@@ -164,19 +189,24 @@ public class SubjectAction extends ActionSupport implements ApplicationAware{
             @Result(name=SUCCESS,location = "/WEB-INF/jsp/subject/subjectList.jsp")
     })
     public String subjectDetail(){
+        System.out.println("in action subjectDetail...");
         System.out.println("type: "+subject.getSubjectType().getId()+" level:"+subject.getSubjectLevel().getId()+" stem:"+subject.getStem());
         List<Subject> list = subjectService.findByExample(subject,Order.asc("id"));
-        System.out.println(list.size());
-        getList();
-        setReqM();
+//        getList();
+//        setReqM();
+        System.out.println("list size:"+list.size());
         for(Subject s:list){
-            System.out.println(s);
+//            System.out.println("s:"+s.getSubjectType().getId());
+            if(s.getSubjectType().getId()!=3){
+                System.out.println(s.getChoices().size());
+                for(Choice c:s.getChoices()){
+                    c.getCorrect();
+                    System.out.println("妈个鸡");
+                }
+            }
         }
         reqM.put("subjects",list);
-        reqM.put("typeid",subject.getSubjectType().getId());
-        reqM.put("levelid",subject.getSubjectLevel().getId());
-        reqM.put("topicid",subject.getTopic().getId());
-        reqM.put("departmentid",subject.getDepartment().getId());
+        reqM.put("count",list.size());
         return SUCCESS;
     }
 

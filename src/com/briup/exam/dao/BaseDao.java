@@ -49,6 +49,14 @@ public class BaseDao<M extends java.io.Serializable>{
 	    return list;
     }
 
+	public List<M> findAll(Order...orders){
+		Criteria criteria = getSession().createCriteria(getEntityClass());
+		for(Order order:orders) {
+			criteria.addOrder(order);
+		}
+		return criteria.list();
+	}
+
     public Class<M> getEntityClass(){
         Type genType = getClass().getGenericSuperclass();
         Type[] params = ((ParameterizedType)genType).getActualTypeArguments();
@@ -72,4 +80,8 @@ public class BaseDao<M extends java.io.Serializable>{
     public void saveOrUpdate(M m) {
         getSession().saveOrUpdate(m);
     }
+
+    public void update(M m){
+    	getSession().update(m);
+	}
 }

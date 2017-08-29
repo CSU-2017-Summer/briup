@@ -38,15 +38,18 @@
         text-decoration: none !important;
     }
 
+    #submit-query:hover{
+        cursor:pointer;
+    }
+
 
 </style>
-${typeid},${levelid},${departmentid},${topicid}
 <div class="editingarea">
     <div class="c_flex"><span class="c_flexible"></span></div>
     <div class="c_editview">
         <div class="c_condition">
             <span><select><option>题干</option></select></span>
-            <span class="pl5 " ><input type="text"></span>
+            <span class="pl5 " ><input type="text" class="inputstem"></span>
             <span class="icon_add">
                 <em class="icon_r">
                     <a href="javascript:void(0)" onclick="addProblem()">单个添加题目</a>
@@ -61,11 +64,6 @@ ${typeid},${levelid},${departmentid},${topicid}
                         <div class="chose">
                             <a href="javascript:void(0)"
                                class="a-types active3 alltypes">全部</a>
-                            <!--<a href="#/AllSubject/a/{{type.id}}/b/{{params.b}}/c/{{params.c}}/d/{{params.d}}"
-                               class="{{params.a==type.id?'active3':''}}"
-                               ng-repeat="type in types">
-                                <%--{{type.realName}}--%>
-                            </a>-->
                             <c:forEach items="${types}" var="vi">
                                 <a class="a-types" href="javascript:void(0)" onclick="getType(${vi.id})">${vi.realName}</a>
                             </c:forEach>
@@ -78,9 +76,6 @@ ${typeid},${levelid},${departmentid},${topicid}
                         <div class="chose">
                             <a href="javascript:void(0)"
                                class="a-levels active3 alllevels">全部</a>
-                            <%--<a href="#/AllSubject/a/{{params.a}}/b/{{level.id}}/c/{{params.c}}/d/{{params.d}}"--%>
-                               <%--class="{{params.b==level.id?'active3':''}}"--%>
-                               <%--ng-repeat="level in levels">{{level.realName}}</a>--%>
                             <c:forEach items="${levels}" var="vi">
                                 <a class="a-levels" id="type_${vi.id}" onclick="getLevel(${vi.id})">${vi.realName}</a>
                             </c:forEach>
@@ -93,9 +88,6 @@ ${typeid},${levelid},${departmentid},${topicid}
                         <div class="chose">
                             <a href="javascript:void(0)"
                                class="a-departments active3 alldepartments">全部</a>
-                            <%--<a href="#/AllSubject/a/{{params.a}}/b/{{params.b}}/c/{{department.id}}/d/{{params.d}}"--%>
-                               <%--class="{{params.c==department.id?'active3':''}}"--%>
-                               <%--ng-repeat="department in departmentes">{{department.name}}</a>--%>
                             <c:forEach items="${departments}" var="vi">
                                 <a class="a-departments" onclick="getDepartment(${vi.id})">${vi.name}</a>
                             </c:forEach>
@@ -130,15 +122,25 @@ ${typeid},${levelid},${departmentid},${topicid}
 </div>
 
 <script>
-    var typeid = 0;
-    var departmentid = 0;
-    var levelid = 0;
-    var topicid = 0;
+    var typeid;
+    var departmentid;
+    var levelid;
+    var topicid;
+
+    console.log("reload");
+
+    //console.log("test:"+ ${typeid});
+
+    if(typeid==undefined) typeid=0;
+    if(departmentid==undefined) departmentid=0;
+    if(levelid==undefined) levelid=0;
+    if(topicid==undefined) topicid=0;
 
 
 
     function addProblem() {
-        $(".right").load("/addSubject.action");
+        var path = "parentdir=subjectList&file=subjectAdd.jsp";
+        $(".right").load("/addSubject.action?"+path);
     }
 
     function getType(id){
@@ -204,15 +206,13 @@ ${typeid},${levelid},${departmentid},${topicid}
 
     $("#submit-query").click(function () {
         console.log("in list page "+"type:"+typeid+" level"+levelid+" department:"+departmentid+" topic:"+topicid);
-        var url="subject.department.id="+departmentid+"&subject.subjectLevel.id="+levelid+"&subject.subjectType.id="+typeid+"&subject.topic.id="+topicid;
+        var stem = $(".inputstem").val();
+        stem = encodeURIComponent(stem);
+        var url="subject.department.id="+departmentid+"&subject.subjectLevel.id="+levelid+"&subject.subjectType.id="+typeid+"&subject.topic.id="+topicid+"&subject.stem="+stem;
+        console.log(url);
         $.post("/subjectDetail.action?"+url,function(){
-            $(".Catalog").load("getDetail.action");
+            $(".Catalog").load("/getDetail.action");
         });
     })
-
-
-
-
-
 
 </script>

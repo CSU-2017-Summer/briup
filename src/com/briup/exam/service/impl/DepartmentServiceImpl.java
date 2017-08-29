@@ -22,7 +22,7 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Override
     public Department findById(Long id) {
-        return null;
+        return dao.findById(id);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Override
     public void save(Department model) {
-
+        dao.save(model);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Override
     public void update(Department model) {
-
+        dao.update(model);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Override
     public void delete(Long id) {
-
+        dao.delete(id);
     }
 
     @Override

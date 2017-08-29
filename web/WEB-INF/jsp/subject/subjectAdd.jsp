@@ -53,7 +53,7 @@
         <!--单选视图-->
         <div class="Answeroptions" id="oneselect" ng-show="subject.typeId==1">
             <div class="Attributetit">答案选项<em>(通过勾选每个选项下面的框难吃时间点咳嗽打开)</em></div>
-            <div class="c_condition"><span class="icon_add"><em class="icon_r" style="float: left">添加选项</em></span></div>
+            <div class="c_condition"><span class="icon_add"><em class="icon_r" style="float: left" onclick="addChoice(1)">添加选项</em></span></div>
             <div class="Answercontent">
                 <div class="Answerpart">
                     <div class="Answerpart_left">
@@ -86,7 +86,7 @@
                                   cols="40" rows="4"></textarea>
                     </div>
 
-                    <div class="clear"></div>
+                    <div class="clear" ></div>
                 </div>
                 <div class="Answerpart">
                     <div class="Answerpart_left">
@@ -100,12 +100,13 @@
                     <div class="clear"></div>
                 </div>
                 <div class="clear"></div>
+                <div class="more"></div>
             </div>
         </div>
         <!--多选视图-->
         <div class="Answeroptions" id="multiselect" ng-show="subject.typeId==2">
             <div class="Attributetit">答案选项<em>(通过勾选每个选项下面的框难吃时间点咳嗽打开)</em></div>
-            <div class="c_condition"><span class="icon_add"><em class="icon_r" style="float: left">添加选项</em></span></div>
+            <div class="c_condition"><span class="icon_add"><em class="icon_r" style="float: left" onclick="addChoice(2)">添加选项</em></span></div>
             <div class="Answercontent">
                 <div class="Answerpart">
                     <div class="Answerpart_left">
@@ -141,6 +142,7 @@
 
                     <div class="clear"></div>
                 </div>
+                
                 <div class="Answerpart">
                     <div class="Answerpart_left">
                         <p>D</p><span>
@@ -175,20 +177,27 @@
 
         <div class="btn_left">
             <span class="btnL">
-                <em class="btnR" ng-click="submit()" onclick="saveSubject()">保存并继续</em>
+                <em class="btnR"  onclick="saveSubject(0)">保存并继续</em>
             </span>
             <span class="btnL">
-                <em class="btnR" ng-click="submitAndClose()">保存并关闭</em>
+                <em class="btnR" onclick="saveSubject(1)">保存并关闭</em>
             </span>
         </div>
     </div>
 </div>
 <script>
+//    var action;
     $(function(){
         $("#multiselect").hide();
         $("#div-answer").hide();
         $("#oneselect").show();
+        <%--console.log("${parentdir}"+":"+"${file}");--%>
+        <%--action = ${parentdir};--%>
     });
+
+    $(".icon_add").click(function () {
+        console.log("click add");
+    })
 
     function changeSubjectType(){
 //        console.log("type changed...");
@@ -198,14 +207,18 @@
             case "1":
 //                console.log("case 1");
                 $("#div-answer").hide();
-                $("#multiselect").hide();
-                $("#oneselect").show();
+                    console.log($("#oneselect").children.length);
+                    $("#multiselect").hide();
+                    $("#oneselect").show();
                 break;
             case "2":
 //                console.log("case 2");
                 $("#div-answer").hide();
-                $("#oneselect").hide();
-                $("#multiselect").show();
+
+                    $("#multiselect").show();
+                    $("#oneselect").hide();
+//                $("#oneselect").hide();
+//                $("#multiselect").show();
                 break;
             case "3":
 //                console.log("case 3");
@@ -215,7 +228,32 @@
         }
     }
 
-    function saveSubject(){
+
+
+    function addChoice(type){
+        var check;
+        if(type==1)
+            check = "radio";
+        else
+            check = "checkbox";
+        var choice = ['A','B','C','D','E','F','G','H','I','J','K'];
+        console.log($(".Answerpart").length);
+        var index = $(".Answerpart").length/2;
+        $(".Answercontent").append('<div class="Answerpart">'+
+        '<div class="Answerpart_left">'+
+            '<p>'+choice[index]+'</p><span>'+
+            '<input  value="3" name="correct" type='+check+' class="multiselect-check" /></span>'+
+            '</div>'+
+            '<div class="Answerpart_right">'+
+            '<textarea class="multiselect-input"'+
+        'cols="40" rows="4"></textarea>'+
+            '</div>'+
+            '<div class="clear"></div>'+
+        '</div>'
+    );
+    }
+
+    function saveSubject(x){
         var type = $("#subjectAdd_selectType").val();
         var topic = $("#subjectAdd_selectTopic").val();
         var department = $("#subjectAdd_selectDepartment").val();
@@ -235,6 +273,8 @@
             })
 //            console.log("choicecontent:"+choicecontent);
 
+
+
             var val = $('.oneselect-check:radio[name="correct"]:checked').val();
 //            console.log("val:"+val);
             var size = $(".oneselect-check").size();
@@ -247,14 +287,11 @@
                     choicecorrect[i]=true;
                 }
             }
-//            console.log("choicecorrect:"+choicecorrect);
         }
         else if(type==2){
             $(".multiselect-input").each(function(){
-//                console.log($(this).val());
                 choicecontent[i++] = ($(this).val());
-            })
-//            console.log("choicecontent:"+choicecontent);
+            });
 
             var i = 0;
             $(".multiselect-check").each(function () {
@@ -263,45 +300,41 @@
                 }
                 else
                     choicecorrect[i++]=false;
-            })
-//            console.log("choicecorrect:"+choicecorrect);
+            });
         }
         else{
             choicecontent=null;
             choicecorrect=null;
-//            console.log("select jiandati");
-//            console.log("choicecontent:"+choicecontent);
         }
 
-
-        var obj = {}
-        obj['subject.subjectType.id']=type;
-        obj['subject.subjectLevel.id'] = level;
-        obj['subject.department.id'] = department;
-        obj['subject.topic.id'] = topic;
-        obj['subject.stem'] = stem;
-        obj['subject.analysis'] = problemcontent;
-        obj['subject.answer'] = answer;
-        obj['choiceContent'] = choicecontent;
-        obj['choiceCorrect'] = choicecorrect;
-
-        console.log("type:"+type+" "+"level:"+level+" "+"department:"+department+" "+"topic:"+topic);
-        console.log("stem:"+" "+stem+" "+" answer:"+answer+" "+" problemconten:"+problemcontent);
-        console.log("choiceContent:"+choicecontent);
-        console.log("choiceCorrect:"+choicecorrect);
 
         var url="";
         if(type!=3) {
             for (var i = 0; i < choicecorrect.length; i++) {
+                choicecontent[i]= encodeURIComponent(choicecontent[i]);
+
                 url += "choice["+i+"].correct=" + choicecorrect[i] +"&choice["+i+"].content="+choicecontent[i];
                 url += "&";
             }
         }
+
+        answer = encodeURIComponent(answer);
+        stem = encodeURIComponent(stem);
+        problemcontent = encodeURIComponent(problemcontent);
+
+
         url+="subject.analysis="+problemcontent+"&subject.answer="+answer+"&subject.department.id="+department+"&subject.stem="+stem+"&subject.subjectLevel.id="+level+"&subject.subjectType.id="+type+"&subject.topic.id="+topic;
         console.log(url);
+
         $.get("/saveSubject.action?"+url,
             function () {
-            console.log("submit data...");
+                alert("保存成功");
+                //TODO
+                if(x==1) $(".right").load("/subjectList.action");
+
+                else{
+                    $(".right").load("${parentdir}"+".action");
+                }
         })
 
     }

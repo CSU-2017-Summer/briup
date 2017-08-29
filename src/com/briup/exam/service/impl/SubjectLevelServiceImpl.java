@@ -23,7 +23,7 @@ public class SubjectLevelServiceImpl implements ISubjectLevelService {
 
     @Override
     public SubjectLevel findById(Long id) {
-        return null;
+        return dao.findById(id);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SubjectLevelServiceImpl implements ISubjectLevelService {
 
     @Override
     public void save(SubjectLevel model) {
-
+        dao.save(model);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class SubjectLevelServiceImpl implements ISubjectLevelService {
 
     @Override
     public void update(SubjectLevel model) {
-
+        dao.update(model);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class SubjectLevelServiceImpl implements ISubjectLevelService {
 
     @Override
     public void delete(Long id) {
-
+        dao.delete(id);
     }
 
     @Override

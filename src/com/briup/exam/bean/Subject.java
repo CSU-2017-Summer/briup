@@ -3,9 +3,7 @@ package com.briup.exam.bean;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +55,7 @@ public class Subject implements Serializable {
 	//考核知识点
 	private Topic topic;
 	//正确的选项
-	private Set<Choice> choices = new HashSet<Choice>();
+	private Set<Choice> choices = new TreeSet<>();
 	
 	@Id
 	@GeneratedValue(strategy = SEQUENCE)
@@ -117,7 +115,8 @@ public class Subject implements Serializable {
 	}
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="department_id")
-	public Department getDepartment() {
+	public Department
+	getDepartment() {
 		return department;
 	}
 	public void setDepartment(Department department) {

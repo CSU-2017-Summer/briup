@@ -21,8 +21,8 @@ public class TopicServiceImpl implements ITopicService {
     private TopicDao dao;
 
     @Override
-    public Topic findById(Long id) {
-        return null;
+    public Topic findById(Long id){
+        return dao.findById(id);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class TopicServiceImpl implements ITopicService {
 
     @Override
     public void update(Topic model) {
-
+        dao.update(model);
     }
 
     @Override
@@ -89,6 +89,7 @@ public class TopicServiceImpl implements ITopicService {
 
     @Override
     public void delete(Long id) {
+        dao.delete(id);
 
     }
 

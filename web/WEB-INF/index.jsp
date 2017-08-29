@@ -58,16 +58,16 @@
                     </li>
                     <li><a href="javascript:void(0);"><em class="base_userset"></em><span>试卷管理</span></a>
                         <ul>
-                            <li><a href="javascript:void(0)">试卷列表</a></li>
-                            <li><a href="javascript:void(0)">手工组卷</a></li>
+                            <li><a href="javascript:void(0)" class="index_nav">试卷列表</a></li>
+                            <li><a href="javascript:void(0)" class="index_nav">手工组卷</a></li>
                         </ul>
                     </li>
                     <li><a href="javascript:void(0);"><em class="base_teachergroup"></em><span>考试管理</span></a>
                         <ul>
-                            <li><a href="javascript:void(0)">题型管理</a></li>
-                            <li><a href="javascript:void(0)">难度管理</a></li>
-                            <li><a href="javascript:void(0)">方向管理</a></li>
-                            <li><a href="javascript:void(0)">知识管理</a></li>
+                            <li><a href="javascript:void(0)" class="index_nav">题型管理</a></li>
+                            <li><a href="javascript:void(0)" class="index_nav">难度管理</a></li>
+                            <li><a href="javascript:void(0)" class="index_nav">方向管理</a></li>
+                            <li><a href="javascript:void(0)" class="index_nav">知识管理</a></li>
                         </ul>
                     </li>
 

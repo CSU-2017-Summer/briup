@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style>
     .Catalogcontentup ul{
@@ -36,14 +37,22 @@
         text-decoration: none !important;
     }
 
+    .c已审核{
+        color:green;
+    }
+
+    .c未审核{
+        color:red;
+    }
+
 
 </style>
 
             <div class="Catalog_right">
                 <div class="Catalogtitle">
-                    总计<em>15552</em>道题&nbsp;&nbsp;
-                    提示：单击体面可显示答案和解析&nbsp;&nbsp;
-                    <input type="checkbox" ng-model="isShow"/><b>显示答案和解析</b>&nbsp;&nbsp;
+                    总计<em>${count}</em>道题&nbsp;&nbsp;
+                    提示：单击显示答案和解析&nbsp;&nbsp;
+                    <input type="checkbox" class="showanswer"/><b>显示答案和解析</b>&nbsp;&nbsp;
                     <div><i>1</i><a href="#" class="pageone">前</a><a href="#" class="pagetwo">后</a></div></div>
 
                 <!-- start here  -->
@@ -55,7 +64,7 @@
                             <b>题号：</b>${subject.id}&nbsp;&nbsp;
                             <b>题型：</b>${subject.subjectType.realName}&nbsp;&nbsp;
                             <b>难度：</b>${subject.subjectLevel.realName}&nbsp;&nbsp;
-                            <b>审核状态：</b><span style="color:red" class="checkit">${subject.checkState}</span>&nbsp;&nbsp;
+                            <b>审核状态：</b><span class="c${subject.checkState}" id="${subject.id}checkit">${subject.checkState}</span>&nbsp;&nbsp;
                             <b>上传人：</b>${subject.user}&nbsp;&nbsp;
                             <b>上传时间:</b>${subject.uploadTime}&nbsp;&nbsp;
                         </div>
@@ -68,18 +77,33 @@
                                     <ul>
                                             <%--<c:forTokens var="i" delims="," items="A,B,C,D"></c:forTokens>--%>
                                             <%--<c:set var="array" value="A,B,C,D"></c:set>--%>
-                                        <c:forEach items="${subject.getChoices()}" var="choice">
-                                            <!-- TODO add ABCD prefix -->
+                                        <c:forEach items="${subject.choices}" var="choice">
                                             <li>
-                                                    ${choice.content}
+                                                    ${choice.getContent()}
                                             </li>
-
                                         </c:forEach>
                                     </ul>
                                 </c:if>
-                                <div ng-show="isShow">
+                                <div class="answerpart">
                                     <b>正确答案：</b>
+                                    <c:if test="${subject.subjectType.id==3}">
                                         ${subject.answer}
+                                    </c:if>
+
+                                    <c:set var="arrayvalue" value="A,B,C,D,E,F,G,H" />
+                                    <c:set var="delim" value="," />
+                                    <c:set var="array" value="${fn:split(arrayvalue,delim)}" />
+
+                                    <c:set var="i" value="0"></c:set>
+                                    <c:if test="${subject.subjectType.id!=3}">
+                                        <c:forEach items="${subject.getChoices()}" var="c">
+                                            <%--${c.correct},${array[i]},,--%>
+                                            <c:if test="${c.correct== 'true' }">
+                                                ${array[i]}
+                                            </c:if>
+                                            <span style="visibility: hidden">${i=i+1}</span>
+                                        </c:forEach>
+                                    </c:if>
                                     <br>
                                     <b>答案解析：</b>
                                         ${subject.analysis}
@@ -97,86 +121,52 @@
             <div class="clear"></div>
 
 <script>
-    var typeid = 0;
-    var departmentid = 0;
-    var levelid = 0;
-    var topicid = 0;
 
-
-    function addProblem() {
-        $(".right").load("/addSubject.action");
-    }
+//    function addProblem() {
+//        $(".right").load("/addSubject.action");
+//    }
+    $(function () {
+       $(".answerpart").hide();
+    });
 
 
     function pass(id){
-        $("#"+id+" .checkit").html("已审核");
         var url = "subject.id="+id+"&subject.checkState=已审核";
         console.log("changeCheckState.action?"+url);
-        $.post("changeCheckState.action?"+url);
+        $.post("changeCheckState.action?"+url,function () {
+            $("#"+id+"checkit").html("已审核");
+            $("#"+id+"checkit").removeClass("c未审核");
+            $("#"+id+"checkit").addClass("c已审核");
+        });
     }
 
     function notpass(id){
-        $("#"+id).hide();
+        var url = "subject.id="+id+"&subject.checkState=未审核";
+        console.log("changeCheckState.action?"+url);
+        $.post("changeCheckState.action?"+url,function () {
+            $("#"+id+"checkit").html("未审核");
+            $("#"+id+"checkit").removeClass("c已审核");
+            $("#"+id+"checkit").addClass("c未审核");
+        });
     }
 
     function deleteit(id){
         $("#"+id).hide();
         var url = "subject.id="+id;
+        alert("删除题目"+id+"?");
         $.post("deleteSubject.action?"+url);
     }
 
-    $(".alldepartments").click(function () {
-        departmentid = 0;
-    })
-
-    $(".alltopics").click(function () {
-        topicid = 0;
-    })
-
-    $(".alllevels").click(function () {
-        levelid = 0;
-    })
-
-    $(".alltypes").click(function () {
-        typeid = 0;
-    })
-
-    $(".a-types").click(function () {
-//        console.log($(this).text());
-        $(".a-types").removeClass("active3");
-        $(this).addClass("active3");
+    $(".showanswer").change(function () {
+       if($(".showanswer").prop("checked")==true){
+           console.log("checked");
+           $(".answerpart").show();
+       }
+       else{
+           console.log("unchecked");
+           $(".answerpart").hide();
+       }
     });
-
-    $(".a-levels").click(function () {
-//        console.log($(this).text());
-        $(".a-levels").removeClass("active3");
-        $(this).addClass("active3");
-    });
-
-    $(".a-departments").click(function () {
-//        console.log($(this).text());
-        $(".a-departments").removeClass("active3");
-        $(this).addClass("active3");
-    });
-
-    $(".a-topics").click(function () {
-//        console.log($(this).text());
-        $(".a-topics").removeClass("active3");
-        $(this).addClass("active3");
-    });
-
-
-    <%--$("#submit-query").click(function () {--%>
-        <%--typeid=${typeid};--%>
-        <%--levelid=${levelid};--%>
-        <%--departmentid = ${departmentid};--%>
-        <%--topicid=${topicid};--%>
-        <%--console.log("in detail page "+"type:"+typeid+" level"+levelid+" department:"+departmentid+" topic:"+topicid);--%>
-        <%--var url="subject.department.id="+departmentid+"&subject.subjectLevel.id="+levelid+"&subject.subjectType.id="+typeid+"&subject.topic.id="+topicid;--%>
-        <%--$.post("/subjectDetail.action?"+url,function(){--%>
-<%--//            $(".Catalog").load("getDetail.action");--%>
-        <%--});--%>
-    <%--});--%>
 
 
 </script>

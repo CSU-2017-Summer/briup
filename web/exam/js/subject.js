@@ -289,12 +289,33 @@ angular.module("app.subject",["ng"])
 $(function(){
     // set index navigator click function
     $(".index_nav").click(function () {
-        console.log("click .index_nav");
+        // console.log("click .index_nav");
         console.log($(this).text());
         switch ($(this).text()){
             case "题目管理":
                 $(".right").load("/subjectList.action");
                 break;
+            case "手工组卷":
+                $(".right").load("/paperAdd.action");
+
+                break;
+            case "试卷列表":
+                $(".right").load("/paperManager.action");
+                break;
+
+            case "题型管理":
+                $(".right").load("/manageType.action");
+                break;
+            case "难度管理":
+                $(".right").load("/manageLevel.action");
+                break;
+            case "方向管理":
+                $(".right").load("/manageDepartment.action");
+                break;
+            case "知识管理":
+                $(".right").load("/manageTopic.action");
+                break;
+
         }
     });
 

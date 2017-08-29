@@ -16,6 +16,8 @@ public class IndexAction extends ActionSupport {
             @Result(name=SUCCESS,location = "/WEB-INF/index.jsp")
     })
     public String indexAction(){
+        System.out.println("to index");
+        System.out.println("...to...index...");
         return SUCCESS;
     }
 }
