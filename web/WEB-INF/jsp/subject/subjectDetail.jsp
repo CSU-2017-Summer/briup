@@ -151,10 +151,12 @@
     }
 
     function deleteit(id){
-        $("#"+id).hide();
+
         var url = "subject.id="+id;
         alert("删除题目"+id+"?");
-        $.post("deleteSubject.action?"+url);
+        $.post("deleteSubject.action?"+url,function(){
+            $("#"+id).hide();
+        });
     }
 
     $(".showanswer").change(function () {

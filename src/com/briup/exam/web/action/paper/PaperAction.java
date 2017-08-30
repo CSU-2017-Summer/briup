@@ -9,10 +9,8 @@ import org.apache.struts2.interceptor.ApplicationAware;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.awt.print.Paper;
+import java.util.*;
 
 /**
  * Created by Liuqi on 2017/8/26.
@@ -93,6 +91,7 @@ public class PaperAction extends ActionSupport implements ApplicationAware{
     @Autowired
     private PaperSubjectServiceImpl paperSubjectService;
 
+
     public void getAllList() {
         this.types = subjectTypeService.findAll(Order.asc("id"));
         this.levels = subjectLevelService.findAll(Order.asc("id"));
@@ -159,7 +158,6 @@ public class PaperAction extends ActionSupport implements ApplicationAware{
             s.setSubject(subjectService.findById(s.getSubject().getId()));
             paperSubjectService.save(s);
         }
-
         return SUCCESS;
     }
 
@@ -173,6 +171,42 @@ public class PaperAction extends ActionSupport implements ApplicationAware{
                 examPaperService.delete(paper.getId());
             }
         }
+        return SUCCESS;
+    }
+
+    @Action(value = "/viewPaper",results = {
+            @Result(name=SUCCESS,location = "/WEB-INF/jsp/paper/paper.jsp")
+    })
+    public String viewPaper(){
+//        System.out.println("title:"+paper.getId());
+
+        ExamPaper exam = examPaperService.findById(paper.getId());
+        System.out.println(paper.getId());
+        System.out.println("title"+exam.getTitle());
+        List<Subject> sublist = new LinkedList<Subject>();
+        Set<PaperSubject> list = exam.getPaperSubjects();
+        long type[] = {0,0,0};
+        int i=0;
+        for(PaperSubject s:list){
+            System.out.println(s.getSubject());
+            sublist.add(s.getSubject());
+            if(s.getSubject().getSubjectType().getId()==1){
+                type[0]=1;
+            }
+            else if(s.getSubject().getSubjectType().getId()==2){
+                type[1]=1;
+            }
+            else if(s.getSubject().getSubjectType().getId()==3){
+                type[2]=1;
+            }
+        }
+
+
+        appM.put("exampaper",exam);
+        appM.put("examsubjects",sublist);
+        appM.put("types",type);
+
+        System.out.println("list size:"+sublist.size());
         return SUCCESS;
     }
 

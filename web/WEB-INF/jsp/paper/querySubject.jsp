@@ -43,7 +43,10 @@
         subjects.add(id);
         console.log($("#add"+id).length);
         console.log(subjects);
-        $("#add"+id).css({"background-img":"briup\\web\\exam\\theme\\1\\images\\icon\\addsub.ico"});
+//        $("#add"+id).css("background-image","url(\\exam\\theme\\1\\images\\icon\\addsub.ico)");
+        $("#add"+id).removeClass("jians");
+        $("#add"+id).addClass("notjians");
+
 
     }
 
@@ -52,7 +55,10 @@
         subjects.delete(id);
         console.log(subjects);
         //TODO return to unadded status
-        $("$add"+id).css({"background-img":"briup\\web\\exam\\theme\\1\\images\\zy\\vdvd.png"});
+//        $("$add"+id).css("background-image","url(\\exam\\theme\\1\\images\\zy\\vdvd.png)");
+//        $("$add"+id).css({'background-image':'url(exam/theme/1/images/zy/vdvd.png 0px 0px)','background-repeat':'no-repeat'});
+        $("#add"+id).addClass("jians");
+        $("#add"+id).removeClass("notjians");
     }
 
 </script>

@@ -99,6 +99,7 @@
 .Onlinee{width: 60px; height: 17px; margin: 0px auto; }
 .Onlinee a{width: 17px; height: 17px; display: inline-block; text-indent: -9999px; margin:0 5px;}
 .Onlinee a.jians{background:url(../images/zy/vdvd.png) 0px 0px no-repeat;}
+.Onlinee a.notjians{background:url(../images/zy/addsub.ico) 0px 0px no-repeat;}
 .Onlinee a.yioan{background:url(../images/zy/sds.png) 0px 0px no-repeat;}
 .Examination{ border-bottom: 1px solid #b7daf8}
 .Examination a{ width: 88px; height: 30px; display: inline-block; margin-right: 5px;background:url(../images/zy/zhen.png) 0px 0px no-repeat; text-align: center; line-height: 30px; color: #000;}

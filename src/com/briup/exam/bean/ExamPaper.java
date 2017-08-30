@@ -116,7 +116,7 @@ public class ExamPaper implements Serializable {
 	/**
 	 * 一对多
 	 * */
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name="examPaper_id")
 	@Cascade({CascadeType.REMOVE})
 	public Set<PaperSubject> getPaperSubjects() {

@@ -55,7 +55,7 @@
                     <a href="javascript:void(0)" onclick="addProblem()">添加题目</a>
                 </em>
             </span>
-            <span class="icon_add" style="float: left"><em class="icon_r" style="float: left">试卷预览</em></span>
+
         </div>
         <div class="divtable">
 
@@ -70,8 +70,13 @@
 </div>
 
 <script>
+    $(function(){
+       $(".btnR").hide();
+    });
+
     departmentid=0;
     $("#paperAdd_selectDepartment").change(function () {
+
         var de = $("#paperAdd_selectDepartment").val();
         departmentid = de;
         if(de!=0)
@@ -79,6 +84,7 @@
 //        $(".right").load("/paperAdd.action?subject.department.id="+de);
         $.get("/querySubject.action?subject.department.id="+de,function (data) {
             $(".divtable").html(data);
+            $(".btnR").show();
         })
     });
 
@@ -95,21 +101,42 @@
         var title = $(".paper_title").val();
         var time = $(".paper_time").val();
         var total = $(".paper_total").val();
+        var sum=0;
+
+        console.log(subjects);
 
         subjects.forEach(function (s) {
             var point = $("#point"+s).val();
             str+="&";
             str+="paperSubjects["+i+"].score="+point+"&paperSubjects["+i+"].subject.id="+s;
             i=i+1;
+            sum+=point;
         });
 
+        if(total==null){
+            total = sum;
+        }
+        title = encodeURIComponent(title);
+        description=encodeURIComponent(description);
+        total = encodeURIComponent(total);
+        time = encodeURIComponent(time);
 
+        if(title==""){
+            alert("请填写试卷名称！");
+        }
 
-        var param = "paper.title="+title+"&paper.description="+description+"&paper.totalPoints="+total+"&paper.answerQuestionTime="+time+"&paper.department.id="+departmentid;
-        console.log("/saveExampaper.action?"+param+str);
-        $.get("/saveExampaper.action?"+param+str,function () {
-            $(".right").load("paperManager.action");
-        });
+        else if(subjects.size==0){
+            alert("请为试卷添加题目！");
+        }
+
+        else {
+
+            var param = "paper.title=" + title + "&paper.description=" + description + "&paper.totalPoints=" + total + "&paper.answerQuestionTime=" + time + "&paper.department.id=" + departmentid;
+            console.log("/saveExampaper.action?" + param + str);
+            $.get("/saveExampaper.action?" + param + str, function () {
+                $(".right").load("paperManager.action");
+            });
+        }
 
     }
 </script>

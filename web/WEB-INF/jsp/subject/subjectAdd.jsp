@@ -52,7 +52,7 @@
         </div>
         <!--单选视图-->
         <div class="Answeroptions" id="oneselect" ng-show="subject.typeId==1">
-            <div class="Attributetit">答案选项<em>(通过勾选每个选项下面的框难吃时间点咳嗽打开)</em></div>
+            <div class="Attributetit">答案选项<em>(通过勾选每个选项下面的框选定正确答案)</em></div>
             <div class="c_condition"><span class="icon_add"><em class="icon_r" style="float: left" onclick="addChoice(1)">添加选项</em></span></div>
             <div class="Answercontent">
                 <div class="Answerpart">
@@ -105,7 +105,7 @@
         </div>
         <!--多选视图-->
         <div class="Answeroptions" id="multiselect" ng-show="subject.typeId==2">
-            <div class="Attributetit">答案选项<em>(通过勾选每个选项下面的框难吃时间点咳嗽打开)</em></div>
+            <div class="Attributetit">答案选项<em>(通过勾选每个选项下面的框选定正确答案)</em></div>
             <div class="c_condition"><span class="icon_add"><em class="icon_r" style="float: left" onclick="addChoice(2)">添加选项</em></span></div>
             <div class="Answercontent">
                 <div class="Answerpart">
@@ -321,8 +321,12 @@
         answer = encodeURIComponent(answer);
         stem = encodeURIComponent(stem);
         problemcontent = encodeURIComponent(problemcontent);
+        console.log(stem);
+        if(stem==""){
+            alert("未填写题干");
+        }
 
-
+        else{
         url+="subject.analysis="+problemcontent+"&subject.answer="+answer+"&subject.department.id="+department+"&subject.stem="+stem+"&subject.subjectLevel.id="+level+"&subject.subjectType.id="+type+"&subject.topic.id="+topic;
         console.log(url);
 
@@ -336,6 +340,7 @@
                     $(".right").load("${parentdir}"+".action");
                 }
         })
+        }
 
     }
 

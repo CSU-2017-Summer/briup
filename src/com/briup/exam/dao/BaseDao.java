@@ -51,9 +51,10 @@ public class BaseDao<M extends java.io.Serializable>{
 
 	public List<M> findAll(Order...orders){
 		Criteria criteria = getSession().createCriteria(getEntityClass());
-		for(Order order:orders) {
-			criteria.addOrder(order);
-		}
+//		for(Order order:orders) {
+//			criteria.addOrder(order);
+//		}
+		System.out.println("liqiangsbbbb"+criteria.list().size());
 		return criteria.list();
 	}
 

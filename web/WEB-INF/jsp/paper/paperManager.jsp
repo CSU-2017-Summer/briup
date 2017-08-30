@@ -35,15 +35,6 @@
                     <td class="tc">${paper.totalPoints}</td>
                 </tr>
                 </c:forEach>
-                <%--<tr>--%>
-                    <%--<td class="tc"><input type="checkbox"></td>--%>
-                    <%--<td class="tc">Html阶段测试试卷</td>--%>
-                    <%--<td class="tc">主要测试HTML与DIV,CSS的内容</td>--%>
-                    <%--<td class="tc">WebUI方向</td>--%>
-                    <%--<td class="tc">2016-3-20</td>--%>
-                    <%--<td class="tc">60min</td>--%>
-                    <%--<td class="tc">100</td>--%>
-                <%--</tr>--%>
 
 
                 </tbody>
@@ -51,6 +42,8 @@
         </div>
         <div class="btn_left">
             <span class="btnL"><em class="btnR" onclick="deletepaper()">删除</em></span>
+            <span class="btnL"><em class="btnR" onclick="viewpaper()">试卷预览</em></span>
+            <%--<span class="icon_add" style="float: left"><em class="icon_r" style="float: left">试卷预览</em></span>--%>
         </div>
     </div>
 </div>
@@ -81,7 +74,25 @@
             $("#tr"+d).hide();
         });
         console.log("/deletePaper.action?"+str);
-        $.get("/deletePaper.action?"+str);
+        $.get("/deletePaper.action?"+str,function () {
+            deletes.clear();
+        });
+    }
+
+    function viewpaper() {
+        var id;
+        if(deletes.size==0){
+            alert("请选择试卷！");
+        }
+        else if(deletes.size>1){
+            alert("选择试卷过多！");
+        }
+        else{
+            deletes.forEach(function(d){
+                id = d;
+                $(".right").load("viewPaper.action?paper.id="+id);
+            })
+        }
     }
 
 </script>

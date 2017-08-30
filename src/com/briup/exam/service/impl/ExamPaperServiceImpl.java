@@ -23,12 +23,12 @@ public class ExamPaperServiceImpl implements IExamPaperService {
 
     @Override
     public ExamPaper findById(Long id) {
-        return null;
+        return dao.findById(id);
     }
 
     @Override
     public List<ExamPaper> findAll(Order... orders) {
-        return (List)dao.findAll(orders);
+        return dao.findAll(new ExamPaper(),orders);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class SubjectTypeServiceImpl implements ISubjectTypeService {
 
     @Override
     public List<SubjectType> findAll(Order... orders) {
-        List list = dao .findAll(new SubjectType(),orders);
+        List list = dao.findAll(new SubjectType(),orders);
         return list;
     }
 
